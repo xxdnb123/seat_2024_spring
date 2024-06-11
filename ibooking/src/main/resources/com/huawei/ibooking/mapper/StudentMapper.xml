@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huawei.ibooking.mapper.StudentMapper">
+    <resultMap id="student" type="com.huawei.ibooking.model.StudentDO"/>
+
+    <select id="getStudents" resultMap="student">
+        select id, number, name
+        from tbl_student
+    </select>
+
+    <select id="getStudentByNumber" resultMap="student" parameterType="java.lang.String">
+        select id,
+               number,
+               name,
+               password,
+               major,
+               college,
+               isBlacklisted,
+               defaultCount
+        from tbl_student
+        where number = #{number}
+    </select>
+
+    <select id="getStudentById" resultMap="student" parameterType="int">
+        select id,
+               number,
+               name,
+               password,
+               major,
+               college,
+               isBlacklisted,
+               defaultCount
+        from tbl_student
+        where id = #{id}
+    </select>
+
+
+    <select id="getStudentByName" resultMap="student" parameterType="java.lang.String">
+        select number, name, password, major, college
+        from tbl_student
+        where name = #{name}
+    </select>
+
+
+
+    <insert id="registerStudent" parameterType="com.huawei.ibooking.model.StudentDO">
+        insert into tbl_student (number, name, password, major, college)
+        values (#{student.number}, #{student.name}, #{student.password}, #{student.major}, #{student.college})
+    </insert>
+
+    <insert id="updateStudentDefaultCount">
+        update tbl_student
+        set defaultCount = #{defaultCount}
+        where id = #{id}
+    </insert>
+
+    <update id="blacklistUpdate">
+        update tbl_student
+        set isBlacklisted = #{isBlacklisted}
+        where number = #{number}
+    </update>
+
+    <select id="findStudentInfo" resultMap="student">
+        select *
+        from tbl_student
+        <where>
+            <if test="number != null">AND number = #{number}</if>
+            <if test="name != null">AND name = #{name}</if>
+            <if test="major != null">AND major = #{major}</if>
+            <if test="college != null">AND college = #{college}</if>
+            <if test="isBlacklisted != null">AND isBlacklisted = #{isBlacklisted}</if>
+            <if test="defaultCount != null">AND defaultCount = #{defaultCount}</if>
+        </where>
+    </select>
+
+
+</mapper>

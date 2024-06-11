@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- reservationRecordMapper.xml -->
+
+<mapper namespace="com.huawei.ibooking.mapper.ReservationRecordMapper">
+
+
+    <resultMap id="ReservationRecordResultMap" type="com.huawei.ibooking.model.ReservationRecordDO">
+        <id property="id" column="id" />
+        <result property="studentId" column="studentId" />
+        <result property="studyRoomId" column="studyRoomId" />
+        <result property="seatId" column="seatId" />
+        <result property="reserveTime" column="reserveTime" />
+        <result property="startTime" column="startTime" />
+        <result property="endTime" column="endTime" />
+        <result property="status" column="status" />
+        <result property="type" column="type" />
+    </resultMap>
+
+    <!-- 定义 resultMap -->
+    <resultMap id="reservationRecordDetailResultMap" type="com.huawei.ibooking.model.ReservationRecordDetailDO">
+        <id column="id" property="id" />
+        <result column="campusId" property="campusId" />
+        <result column="regionId" property="regionId" />
+        <result column="buildingId" property="buildingId" />
+        <result column="number" property="number" />
+        <result column="column" property="column" />
+        <result column="row" property="row" />
+        <result property="reserveTime" column="reserveTime" />
+        <result column="startTime" property="startTime" />
+        <result column="endTime" property="endTime" />
+        <result column="status" property="status" />
+        <result column="type" property="type" />
+    </resultMap>
+
+
+    <insert id="createReservationRecord" parameterType="com.huawei.ibooking.model.ReservationRecordDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tbl_reservation_record (studentId, studyRoomId, seatId, reserveTime, startTime, endTime, status, type)
+        VALUES (#{studentId}, #{studyRoomId}, #{seatId}, #{reserveTime}, #{startTime}, #{endTime}, #{status}, #{type})
+    </insert>
+
+    <select id="getReservationRecordById" resultMap="ReservationRecordResultMap">
+        SELECT * FROM tbl_reservation_record WHERE id = #{id}
+    </select>
+
+
+    <update id="updateReservationRecord" parameterType="com.huawei.ibooking.model.ReservationRecordDO">
+        UPDATE tbl_reservation_record
+        SET studentId = #{studentId}, studyRoomId = #{studyRoomId}, seatId = #{seatId},
+            startTime = #{startTime}, endTime = #{endTime}, status = #{status}, type = #{type}
+        WHERE id = #{id}
+    </update>
+
+    <update id="cancelReservationRecord">
+        UPDATE tbl_reservation_record
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteReservationRecord" parameterType="int">
+        DELETE FROM tbl_reservation_record WHERE id = #{id}
+    </delete>
+
+    <select id="searchReservationRecords" resultMap="ReservationRecordResultMap" parameterType="com.huawei.ibooking.model.ReservationRecordDO">
+        SELECT * FROM tbl_reservation_record
+
+        <where>
+        <if test="studentId != null">
+            studentId = #{studentId}
+        </if>
+        <if test="studyRoomId != null">
+            AND studyRoomId = #{studyRoomId}
+        </if>
+        <if test="seatId != null">
+            AND seatId = #{seatId}
+        </if>
+        <if test="startTime != null">
+            AND startTime &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND endTime &lt;= #{endTime}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        </where>
+    </select>
+
+    <select id="searchOverLapReservationRecords" resultMap="ReservationRecordResultMap" parameterType="com.huawei.ibooking.model.ReservationRecordDO">
+        SELECT * FROM tbl_reservation_record
+
+        <where>
+        <if test="seatId != null">
+            seatId = #{seatId}
+        </if>
+        <if test="startTime != null">
+            AND `startTime` &lt;= #{endTime}
+        </if>
+        <if test="endTime != null">
+            AND `endTime` &gt;= #{startTime}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        </where>
+    </select>
+
+    <select id="getReservationRecords" resultMap="ReservationRecordResultMap" parameterType="int">
+        SELECT * FROM tbl_reservation_record WHERE status = #{status}
+    </select>
+
+    <select id="getReservationRecordsByStudentId" resultMap="reservationRecordDetailResultMap">
+        SELECT
+            rr.id AS id,
+            sr.campusId AS campusId,
+            sr.regionId AS regionId,
+            sr.buildingId AS buildingId,
+            sr.number AS number,
+            s.seatColumn AS `column`,
+        s.seatRow AS `row`,
+        rr.reserveTime AS reserveTime,
+        rr.startTime AS startTime,
+        rr.endTime AS endTime,
+        rr.status AS status,
+        rr.type AS type
+        FROM
+            tbl_reservation_record rr
+            JOIN tbl_study_room sr ON rr.studyRoomId = sr.id
+            JOIN tbl_seat s ON rr.seatId = s.id
+        WHERE
+            rr.studentId = #{studentId}
+    </select>
+
+
+</mapper>

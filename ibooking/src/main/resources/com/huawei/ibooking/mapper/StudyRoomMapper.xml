@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.ibooking.mapper.StudyRoomMapper">
+
+    <resultMap id="StudyRoomResultMap" type="com.huawei.ibooking.model.StudyRoomDO">
+        <id property="id" column="id" />
+        <result property="campusId" column="campusId" />
+        <result property="regionId" column="regionId" />
+        <result property="buildingId" column="buildingId" />
+        <result property="number" column="number" />
+        <result property="status" column="status" />
+        <result property="openTime" column="openTime" />
+        <result property="closeTime" column="closeTime" />
+        <result property="availableSeatNumber" column="availableSeatNumber" />
+    </resultMap>
+
+    <insert id="insertStudyRoom" parameterType="com.huawei.ibooking.model.StudyRoomDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tbl_study_room (campusId, regionId, buildingId, number, status, openTime, closeTime, availableSeatNumber)
+        VALUES (#{campusId}, #{regionId}, #{buildingId}, #{number}, #{status}, #{openTime}, #{closeTime}, #{availableSeatNumber})
+    </insert>
+
+    <select id="getStudyRoomById" parameterType="int" resultMap="StudyRoomResultMap">
+        SELECT id, campusId, regionId, buildingId, number, status, openTime, closeTime, availableSeatNumber
+        FROM tbl_study_room
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateStudyRoom" parameterType="com.huawei.ibooking.model.StudyRoomDO">
+        UPDATE tbl_study_room
+        SET campusId = #{campusId},
+            regionId = #{regionId},
+            buildingId = #{buildingId},
+            number = #{number},
+            status = #{status},
+            openTime = #{openTime},
+            closeTime = #{closeTime},
+            availableSeatNumber = #{availableSeatNumber}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteStudyRoom" parameterType="int">
+        DELETE FROM tbl_study_room
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findStudyRoomInfo" resultMap="StudyRoomResultMap" parameterType="com.huawei.ibooking.model.StudyRoomDO">
+        select *
+        from tbl_study_room
+        <where>
+            <if test="campusId != null">AND campusId = #{campusId}</if>
+            <if test="regionId != null">AND regionId = #{regionId}</if>
+            <if test="buildingId != null">AND buildingId = #{buildingId}</if>
+            <if test="number != null">AND number = #{number}</if>
+            <if test="status != null">AND status = #{status}</if>
+            <if test="openTime != null">AND openTime &lt;= #{openTime}</if>
+            <if test="closeTime != null">AND closeTime &gt;= #{closeTime}</if>
+            <if test="availableSeatNumber != null">AND availableSeatNumber = #{availableSeatNumber}</if>
+
+        </where>
+    </select>
+
+</mapper>

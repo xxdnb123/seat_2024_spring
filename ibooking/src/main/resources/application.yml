@@ -1,0 +1,36 @@
+server:
+  port: 8090
+  address: localhost
+
+spring:
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .html
+
+  profiles:
+    active: test
+
+  mail:
+    host: smtp.qq.com
+    username: 1662994417@qq.com
+    password: byadnaorhgehejeb
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            required: false
+          debug: true
+    protocol: smtps
+    des: 582778480@qq.com
+
+mybatis:
+  mapper-locations: classpath:com.huawei.ibooking.mapper/*.xml
+  type-aliases-package: com.huawei.ibooking.model
+
+logging:
+  level:
+    com.huawei.ibooking: debug

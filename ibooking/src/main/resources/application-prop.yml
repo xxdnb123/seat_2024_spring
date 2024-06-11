@@ -1,0 +1,43 @@
+server:
+  port: 8090
+  address: 0.0.0.0
+
+spring:
+  datasource:
+    url: jdbc:mysql://10.177.44.50:3306/spm?useSSL=false&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      mode: always
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .html
+
+  mail:
+    host: smtp.qq.com
+    username: 1662994417@qq.com
+    password: ssfhjlsahfksfhsakhfskadfas
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            required: false
+          debug: true
+    protocol: smtps
+    des: 582778480@qq.com
+
+mybatis:
+  mapper-locations: classpath:com.huawei.ibooking.mapper/*.xml
+  type-aliases-package: com.huawei.ibooking.model
+
+logging:
+  level:
+    com.huawei.ibooking: debug
