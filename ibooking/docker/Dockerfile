@@ -15,7 +15,8 @@
 FROM openjdk:8
 # 将jar包添加到容器中并更名为xx.jar
 ADD ibooking-0.01.jar app.jar
-
+COPY ibooking-0.01.jar /app/ibooking-0.01.jar
+WORKDIR /app
 MAINTAINER xxd <1584049114@qq.com>
 # 复制jar文件到容器中
 COPY ibooking-0.01.jar /app/ibooking-0.01.jar
